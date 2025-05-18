@@ -103,8 +103,8 @@ def train_model(sample_data, preprocessor):
 
 
 def test_model_exists():
-    print(f"モデルファイルパス: {MODEL_PATH}")
     """モデルファイルが存在するか確認"""
+    print(f"モデルファイルパス: {MODEL_PATH}")
     if not os.path.exists(MODEL_PATH):
         pytest.skip("モデルファイルが存在しないためスキップします")
     assert os.path.exists(MODEL_PATH), "モデルファイルが存在しません"
@@ -173,6 +173,70 @@ def test_model_reproducibility(sample_data, preprocessor):
     predictions1 = model1.predict(X_test)
     predictions2 = model2.predict(X_test)
 
-    assert np.array_equal(
-        predictions1, predictions2
-    ), "モデルの予測結果に再現性がありません"
+    assert np.array_equal(predictions1, predictions2), "モデルの予測結果に再現性がありません"
+
+
+def test_model_no_performance_regression(train_model, sample_data):
+    """新しいモデルが過去バージョンのモデルと比較して性能劣化がないか検証"""
+    import json
+
+    # 現在のモデルを取得
+    current_model, X_test, y_test = train_model
+
+    # 現在のモデルの性能を評価
+    current_predictions = current_model.predict(X_test)
+    current_accuracy = accuracy_score(y_test, current_predictions)
+    print(f"現在のモデルの精度: {current_accuracy:.4f}")
+
+    # 性能メトリクスを保存するJSONファイルのパス
+    metrics_file = os.path.join(MODEL_DIR, "model_metrics.json")
+
+    # 過去の性能メトリクスが存在しない場合は、現在のメトリクスを保存
+    if not os.path.exists(metrics_file):
+        print("過去の性能メトリクスが見つかりません。現在のメトリクスをベースラインとして保存します。")
+
+        # モデルの性能メトリクスを保存
+        metrics = {
+            "accuracy": current_accuracy,
+            "timestamp": time.time(),
+            "model_version": "1.0.0",
+        }
+
+        os.makedirs(os.path.dirname(metrics_file), exist_ok=True)
+        with open(metrics_file, "w") as f:
+            json.dump(metrics, f)
+
+        pytest.skip("ベースラインメトリクスを作成したため、比較テストをスキップします")
+
+    # 過去の性能メトリクスを読み込む
+    with open(metrics_file, "r") as f:
+        baseline_metrics = json.load(f)
+
+    baseline_accuracy = baseline_metrics["accuracy"]
+    print(f"過去バージョンのモデルの精度: {baseline_accuracy:.4f}")
+    print(f"過去バージョンのタイムスタンプ: {time.ctime(baseline_metrics['timestamp'])}")
+
+    # 性能比較（新しいモデルが過去バージョン以上の性能であることを確認）
+    print(f"精度差: {current_accuracy - baseline_accuracy:.4f}")
+
+    # 許容される性能低下の閾値（例: 1%まで）
+    tolerance = 0.01
+
+    # 新しいモデルの性能が過去バージョンと比較して大幅に低下していないことを確認
+    assert current_accuracy >= (baseline_accuracy - tolerance), (
+        f"モデルの性能が過去バージョンより{tolerance*100}%以上低下しています。"
+        f"(現在: {current_accuracy:.4f}, 過去: {baseline_accuracy:.4f})"
+    )
+
+    # 性能が向上した場合は、新しいメトリクスを保存するオプションも考えられます
+    if current_accuracy > baseline_accuracy:
+        print("性能が向上しました。新しいベースラインとして保存します。")
+        # モデルの性能メトリクスを更新
+        metrics = {
+            "accuracy": current_accuracy,
+            "timestamp": time.time(),
+            "model_version": baseline_metrics.get("model_version", "1.0.0") + ".next",
+        }
+
+        with open(metrics_file, "w") as f:
+            json.dump(metrics, f)
