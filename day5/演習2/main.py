@@ -11,6 +11,7 @@ import pickle
 import time
 import great_expectations as gx
 
+
 class DataLoader:
     """データロードを行うクラス"""
 
@@ -89,6 +90,7 @@ class DataValidator:
                 print(f"警告: 以下のカラムがありません: {missing_columns}")
                 return False, [{"success": False, "missing_columns": missing_columns}]
 
+            # データの検証
             expectations = [
                 gx.expectations.ExpectColumnDistinctValuesToBeInSet(
                     column="Pclass", value_set=[1, 2, 3]
