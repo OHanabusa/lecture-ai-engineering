@@ -173,7 +173,9 @@ def test_model_reproducibility(sample_data, preprocessor):
     predictions1 = model1.predict(X_test)
     predictions2 = model2.predict(X_test)
 
-    assert np.array_equal(predictions1, predictions2), "モデルの予測結果に再現性がありません"
+    assert np.array_equal(
+        predictions1, predictions2
+    ), "モデルの予測結果に再現性がありません"
 
 
 def test_model_no_performance_regression(train_model, sample_data):
@@ -193,7 +195,9 @@ def test_model_no_performance_regression(train_model, sample_data):
 
     # 過去の性能メトリクスが存在しない場合は、現在のメトリクスを保存
     if not os.path.exists(metrics_file):
-        print("過去の性能メトリクスが見つかりません。現在のメトリクスをベースラインとして保存します。")
+        print(
+            "過去の性能メトリクスが見つかりません。現在のメトリクスをベースラインとして保存します。"
+        )
 
         # モデルの性能メトリクスを保存
         metrics = {
@@ -214,7 +218,9 @@ def test_model_no_performance_regression(train_model, sample_data):
 
     baseline_accuracy = baseline_metrics["accuracy"]
     print(f"過去バージョンのモデルの精度: {baseline_accuracy:.4f}")
-    print(f"過去バージョンのタイムスタンプ: {time.ctime(baseline_metrics['timestamp'])}")
+    print(
+        f"過去バージョンのタイムスタンプ: {time.ctime(baseline_metrics['timestamp'])}"
+    )
 
     # 性能比較（新しいモデルが過去バージョン以上の性能であることを確認）
     print(f"精度差: {current_accuracy - baseline_accuracy:.4f}")
