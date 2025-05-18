@@ -38,6 +38,7 @@ def sample_data():
 
     return pd.read_csv(DATA_PATH)
 
+
 @pytest.fixture
 def preprocessor():
     """前処理パイプラインを定義"""
