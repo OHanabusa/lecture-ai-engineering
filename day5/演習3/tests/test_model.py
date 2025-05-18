@@ -38,7 +38,6 @@ def sample_data():
 
     return pd.read_csv(DATA_PATH)
 
-
 @pytest.fixture
 def preprocessor():
     """前処理パイプラインを定義"""
@@ -116,6 +115,8 @@ def test_model_accuracy(train_model):
     # 予測と精度計算
     y_pred = model.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
+
+    print(f"モデルの精度: {accuracy}")
 
     # Titanicデータセットでは0.75以上の精度が一般的に良いとされる
     assert accuracy >= 0.75, f"モデルの精度が低すぎます: {accuracy}"
