@@ -1,5 +1,4 @@
 tweepy
-Mastodon.py
 sudachipy
 sudachidict-full
 transformers
@@ -10,3 +9,5 @@ weasyprint
 markdown2
 emoji
 pytest
+scikit-learn
+great_expectations
