@@ -31,20 +31,17 @@ tw_api_key = st.text_input("Twitter API Key")
 tw_api_secret = st.text_input("Twitter API Secret", type="password")
 tw_access_token = st.text_input("Twitter Access Token", type="password")
 tw_access_secret = st.text_input("Twitter Access Token Secret", type="password")
-ma_base_url = st.text_input("Mastodon Base URL")
-ma_token = st.text_input("Mastodon Access Token", type="password")
 if st.button("Run"):
     keywords: List[str] = [k for k in keywords_input.split() if k]
     if keywords:
-        if not ((tw_bearer or (tw_api_key and tw_api_secret and tw_access_token and tw_access_secret)) and ma_base_url and ma_token):
-            st.error("All API credentials are required")
+        if not (tw_bearer or (tw_api_key and tw_api_secret and tw_access_token and tw_access_secret)):
+            st.error("Twitter credentials are required")
+
         else:
             with st.spinner("Collecting data..."):
                 df: pd.DataFrame = run_analysis(
                     keywords,
                     tw_bearer,
-                    ma_base_url,
-                    ma_token,
                     tw_api_key,
                     tw_api_secret,
                     tw_access_token,
