@@ -10,6 +10,7 @@ from sudachipy import dictionary, tokenizer
 logger = logging.getLogger(__name__)
 # use the dictionary bundled with sudachidict-full
 _tokenizer = dictionary.Dictionary(dict='full').create()
+
 _mode = tokenizer.Tokenizer.SplitMode.B
 
 URL_PATTERN = re.compile(r"https?://\S+")
