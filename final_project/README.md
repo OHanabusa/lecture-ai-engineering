@@ -9,7 +9,9 @@ pip install -r requirements.txt
 ```
 streamlit run frontend/ui_app.py
 ```
-At launch, enter your Twitter bearer token and Mastodon credentials in the UI.
+At launch, enter either a Twitter bearer token **or** OAuth1 credentials
+(API key/secret and access token/secret) along with your Mastodon credentials
+in the UI.
 
 ## Architecture
 ```mermaid
