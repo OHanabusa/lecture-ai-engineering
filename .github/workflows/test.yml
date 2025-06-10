@@ -1,8 +1,6 @@
-name: ML Pipeline CI
+name: Final Project CI
 
 on:
-  # push:
-  #   branches: [ main, master  ]
   pull_request:
     branches: [ main, master ]
 
@@ -15,27 +13,14 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.10'
+        python-version: '3.11'
         
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pytest great_expectations pandas scikit-learn flake8 black mypy pytest-cov
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        
-    - name: Lint with flake8
+        pip install -r final_project/requirements.txt
+
+    - name: Run tests
       run: |
-        flake8 day5/演習3 --count --select=E9,F63,F7,F82 --show-source --statistics
-        flake8 day5/演習3 --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
-        
-    - name: Format check with black
-      run: |
-        black --check day5/演習3
-        
-    - name: Run data tests
-      run: |
-        pytest day5/演習3/tests/test_data.py -v -s
-        
-    - name: Run model tests
-      run: |
-        pytest day5/演習3/tests/test_model.py -v -s
+        cd final_project
+        pytest -q
