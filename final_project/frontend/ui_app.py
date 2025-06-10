@@ -6,6 +6,12 @@ from typing import List
 import pandas as pd
 import streamlit as st
 
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).resolve().parents[1]))
+
+
 from src.analysis.metrics import run_analysis
 from src.report.reporter import generate_pdf
 

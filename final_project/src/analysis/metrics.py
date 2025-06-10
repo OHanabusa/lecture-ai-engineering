@@ -53,7 +53,6 @@ def run_analysis(
     tw_client = TwitterClient(tw_token)
     ma_client = MastodonClient(ma_base_url, ma_token)
 
-
     keyword_probs: Dict[str, List[dict[str, float]]] = defaultdict(list)
 
     for kw in keywords:
