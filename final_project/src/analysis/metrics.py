@@ -49,6 +49,7 @@ def run_analysis(
     tw_api_secret: str = "",
     tw_access_token: str = "",
     tw_access_secret: str = "",
+    hf_token: str = "",
 ) -> pd.DataFrame:
     """Collect posts and compute metrics."""
     tw_client = TwitterClient(
@@ -65,7 +66,7 @@ def run_analysis(
     for kw in keywords:
         tw_posts = tw_client.search_recent(kw)
         posts = preprocess_posts(tw_posts)
-        probs = analyze(posts)
+        probs = analyze(posts, token=hf_token or None)
         keyword_probs[kw].extend(probs)
     df = calculate_metrics(keyword_probs)
     df.insert(0, "timestamp", datetime.now())

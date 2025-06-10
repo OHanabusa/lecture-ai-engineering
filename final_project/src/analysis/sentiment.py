@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from functools import lru_cache
-from typing import List
+from typing import List, Optional
 
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 from transformers import pipeline
@@ -10,17 +10,17 @@ from transformers import pipeline
 logger = logging.getLogger(__name__)
 
 
-@lru_cache(maxsize=1)
-def _get_pipeline():
+@lru_cache(maxsize=None)
+def _get_pipeline(token: Optional[str] = None):
     model_name = "rinna/japanese-roberta-base-sentiment"
-    tok = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForSequenceClassification.from_pretrained(model_name)
+    tok = AutoTokenizer.from_pretrained(model_name, token=token)
+    model = AutoModelForSequenceClassification.from_pretrained(model_name, token=token)
     return pipeline("sentiment-analysis", model=model, tokenizer=tok)
 
 
-def analyze(texts: List[str]) -> List[dict[str, float]]:
+def analyze(texts: List[str], token: str | None = None) -> List[dict[str, float]]:
     """Return sentiment probabilities per text."""
-    pipe = _get_pipeline()
+    pipe = _get_pipeline(token)
     outputs = pipe(texts, truncation=True)
     results = []
     for out in outputs:

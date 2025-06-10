@@ -31,6 +31,7 @@ tw_api_key = st.text_input("Twitter API Key")
 tw_api_secret = st.text_input("Twitter API Secret", type="password")
 tw_access_token = st.text_input("Twitter Access Token", type="password")
 tw_access_secret = st.text_input("Twitter Access Token Secret", type="password")
+hf_token = st.text_input("Hugging Face Token", type="password")
 if st.button("Run"):
     keywords: List[str] = [k for k in keywords_input.split() if k]
     if keywords:
@@ -46,6 +47,7 @@ if st.button("Run"):
                     tw_api_secret,
                     tw_access_token,
                     tw_access_secret,
+                    hf_token,
                 )
             st.dataframe(df)
             chart_data = df.set_index("keyword")[["positive%", "negative%", "neutral%"]]
