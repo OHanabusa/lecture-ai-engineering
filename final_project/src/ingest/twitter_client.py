@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-import os
+
 from datetime import datetime, timedelta
 from typing import List
 
@@ -13,11 +13,11 @@ logger = logging.getLogger(__name__)
 class TwitterClient:
     """Wrapper for Twitter recent search."""
 
-    def __init__(self) -> None:
-        token = os.getenv("TW_BEARER_TOKEN")
-        if not token:
-            raise ValueError("TW_BEARER_TOKEN is not set")
-        self.client = tweepy.Client(bearer_token=token, wait_on_rate_limit=True)
+    def __init__(self, bearer_token: str) -> None:
+        if not bearer_token:
+            raise ValueError("Twitter bearer token required")
+        self.client = tweepy.Client(bearer_token=bearer_token, wait_on_rate_limit=True)
+
 
     def search_recent(self, keyword: str, limit: int = 100) -> List[str]:
         """Search recent tweets within last 24h."""

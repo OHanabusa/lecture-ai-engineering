@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-import os
+
 from datetime import datetime, timedelta
 from typing import List
 
@@ -13,12 +13,11 @@ logger = logging.getLogger(__name__)
 class MastodonClient:
     """Wrapper for Mastodon hashtag search."""
 
-    def __init__(self) -> None:
-        base_url = os.getenv("MASTODON_API_BASE_URL")
-        token = os.getenv("MASTODON_ACCESS_TOKEN")
-        if not base_url or not token:
-            raise ValueError("Mastodon API credentials not set")
-        self.client = Mastodon(api_base_url=base_url, access_token=token)
+    def __init__(self, base_url: str, access_token: str) -> None:
+        if not base_url or not access_token:
+            raise ValueError("Mastodon API credentials required")
+        self.client = Mastodon(api_base_url=base_url, access_token=access_token)
+
 
     def search_recent(self, keyword: str, limit: int = 100) -> List[str]:
         """Search recent toots for a hashtag."""

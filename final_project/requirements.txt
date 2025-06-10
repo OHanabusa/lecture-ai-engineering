@@ -6,7 +6,6 @@ transformers
 torch
 pandas
 streamlit
-python-dotenv
 weasyprint
 markdown2
 emoji

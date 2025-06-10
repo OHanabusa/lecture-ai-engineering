@@ -13,19 +13,18 @@ _mode = tokenizer.Tokenizer.SplitMode.B
 
 URL_PATTERN = re.compile(r"https?://\S+")
 RT_PATTERN = re.compile(r"RT @\w+|via @\w+")
-EMOJI_PATTERN = emoji.get_emoji_regexp()
 
 
 def clean_text(text: str) -> str:
     """Remove URLs, emojis and RT noise."""
     text = URL_PATTERN.sub("", text)
     text = RT_PATTERN.sub("", text)
-    text = EMOJI_PATTERN.sub("", text)
+    text = emoji.replace_emoji(text, "")
     return text.strip()
 
 
 def tokenize(text: str) -> List[str]:
-    """Return content words tokens."""
+    """Return content word tokens."""
     morphs = _tokenizer.tokenize(text, _mode)
     content_pos = {"名詞", "動詞", "形容詞", "副詞"}
     tokens = [m.surface() for m in morphs if m.part_of_speech()[0] in content_pos]

@@ -43,9 +43,16 @@ def calculate_metrics(keyword_posts: Dict[str, List[dict[str, float]]]) -> pd.Da
     return df
 
 
-def run_analysis(keywords: List[str]) -> pd.DataFrame:
-    tw_client = TwitterClient()
-    ma_client = MastodonClient()
+def run_analysis(
+    keywords: List[str],
+    tw_token: str,
+    ma_base_url: str,
+    ma_token: str,
+) -> pd.DataFrame:
+    """Collect posts and compute metrics."""
+    tw_client = TwitterClient(tw_token)
+    ma_client = MastodonClient(ma_base_url, ma_token)
+
 
     keyword_probs: Dict[str, List[dict[str, float]]] = defaultdict(list)
 
