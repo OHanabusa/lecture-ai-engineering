@@ -1,0 +1,12 @@
+tweepy
+Mastodon.py
+sudachipy
+sudachidict-full
+transformers
+torch
+pandas
+streamlit
+weasyprint
+markdown2
+emoji
+pytest
