@@ -8,7 +8,9 @@ import emoji
 from sudachipy import dictionary, tokenizer
 
 logger = logging.getLogger(__name__)
-_tokenizer = dictionary.Dictionary().create()
+# use the dictionary bundled with sudachidict-full
+_tokenizer = dictionary.Dictionary(dict='full').create()
+
 _mode = tokenizer.Tokenizer.SplitMode.B
 
 URL_PATTERN = re.compile(r"https?://\S+")

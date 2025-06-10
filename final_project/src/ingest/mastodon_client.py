@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import logging
-
 from datetime import datetime, timedelta
 from typing import List
 
@@ -17,7 +16,6 @@ class MastodonClient:
         if not base_url or not access_token:
             raise ValueError("Mastodon API credentials required")
         self.client = Mastodon(api_base_url=base_url, access_token=access_token)
-
 
     def search_recent(self, keyword: str, limit: int = 100) -> List[str]:
         """Search recent toots for a hashtag."""

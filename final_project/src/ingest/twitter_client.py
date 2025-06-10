@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import logging
-
 from datetime import datetime, timedelta
 from typing import List
 
@@ -17,7 +16,6 @@ class TwitterClient:
         if not bearer_token:
             raise ValueError("Twitter bearer token required")
         self.client = tweepy.Client(bearer_token=bearer_token, wait_on_rate_limit=True)
-
 
     def search_recent(self, keyword: str, limit: int = 100) -> List[str]:
         """Search recent tweets within last 24h."""
