@@ -11,6 +11,7 @@ streamlit run frontend/ui_app.py
 ```
 At launch, enter your Twitter bearer token and Mastodon credentials in the UI.
 
+
 ## Architecture
 ```mermaid
 graph TD
