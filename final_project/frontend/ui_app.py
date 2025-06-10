@@ -11,6 +11,7 @@ from pathlib import Path
 
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
+
 from src.analysis.metrics import run_analysis
 from src.report.reporter import generate_pdf
 
