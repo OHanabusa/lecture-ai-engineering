@@ -9,7 +9,12 @@ import streamlit as st
 import sys
 from pathlib import Path
 
-sys.path.append(str(Path(__file__).resolve().parents[1]))
+# Ensure the project root is on the Python module search path so that the
+# `src` package can be imported when the app is executed from different
+# working directories (e.g. Streamlit Cloud).
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 
 from src.analysis.metrics import run_analysis
@@ -20,17 +25,27 @@ logging.basicConfig(level=logging.INFO)
 
 st.title("Automatic Social Listening")
 keywords_input = st.text_input("Keywords (space separated)")
-tw_token = st.text_input("Twitter Bearer Token", type="password")
-ma_base_url = st.text_input("Mastodon Base URL")
-ma_token = st.text_input("Mastodon Access Token", type="password")
+tw_bearer = st.text_input("Twitter Bearer Token", type="password")
+st.markdown("**OR** provide OAuth1 credentials:")
+tw_api_key = st.text_input("Twitter API Key")
+tw_api_secret = st.text_input("Twitter API Secret", type="password")
+tw_access_token = st.text_input("Twitter Access Token", type="password")
+tw_access_secret = st.text_input("Twitter Access Token Secret", type="password")
 if st.button("Run"):
     keywords: List[str] = [k for k in keywords_input.split() if k]
     if keywords:
-        if not (tw_token and ma_base_url and ma_token):
-            st.error("All API credentials are required")
+        if not (tw_bearer or (tw_api_key and tw_api_secret and tw_access_token and tw_access_secret)):
+            st.error("Twitter credentials are required")
         else:
             with st.spinner("Collecting data..."):
-                df: pd.DataFrame = run_analysis(keywords, tw_token, ma_base_url, ma_token)
+                df: pd.DataFrame = run_analysis(
+                    keywords,
+                    tw_bearer,
+                    tw_api_key,
+                    tw_api_secret,
+                    tw_access_token,
+                    tw_access_secret,
+                )
             st.dataframe(df)
             chart_data = df.set_index("keyword")[["positive%", "negative%", "neutral%"]]
             st.bar_chart(chart_data)

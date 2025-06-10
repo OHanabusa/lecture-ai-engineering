@@ -8,7 +8,6 @@ from typing import Dict, Iterable, List
 import pandas as pd
 
 from src.ingest.twitter_client import TwitterClient
-from src.ingest.mastodon_client import MastodonClient
 from src.preprocessing.cleaner import preprocess_posts
 from .sentiment import analyze
 
@@ -46,19 +45,25 @@ def calculate_metrics(keyword_posts: Dict[str, List[dict[str, float]]]) -> pd.Da
 def run_analysis(
     keywords: List[str],
     tw_token: str,
-    ma_base_url: str,
-    ma_token: str,
+    tw_api_key: str = "",
+    tw_api_secret: str = "",
+    tw_access_token: str = "",
+    tw_access_secret: str = "",
 ) -> pd.DataFrame:
     """Collect posts and compute metrics."""
-    tw_client = TwitterClient(tw_token)
-    ma_client = MastodonClient(ma_base_url, ma_token)
+    tw_client = TwitterClient(
+        bearer_token=tw_token,
+        api_key=tw_api_key or None,
+        api_secret=tw_api_secret or None,
+        access_token=tw_access_token or None,
+        access_secret=tw_access_secret or None,
+    )
 
     keyword_probs: Dict[str, List[dict[str, float]]] = defaultdict(list)
 
     for kw in keywords:
         tw_posts = tw_client.search_recent(kw)
-        ma_posts = ma_client.search_recent(kw)
-        posts = preprocess_posts(tw_posts + ma_posts)
+        posts = preprocess_posts(tw_posts)
         probs = analyze(posts)
         keyword_probs[kw].extend(probs)
     df = calculate_metrics(keyword_probs)
