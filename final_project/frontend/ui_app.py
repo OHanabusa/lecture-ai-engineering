@@ -36,6 +36,7 @@ if st.button("Run"):
     if keywords:
         if not (tw_bearer or (tw_api_key and tw_api_secret and tw_access_token and tw_access_secret)):
             st.error("Twitter credentials are required")
+
         else:
             with st.spinner("Collecting data..."):
                 df: pd.DataFrame = run_analysis(
