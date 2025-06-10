@@ -9,7 +9,12 @@ import streamlit as st
 import sys
 from pathlib import Path
 
-sys.path.append(str(Path(__file__).resolve().parents[1]))
+# Ensure the project root is on the Python module search path so that the
+# `src` package can be imported when the app is executed from different
+# working directories (e.g. Streamlit Cloud).
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 
 from src.analysis.metrics import run_analysis
