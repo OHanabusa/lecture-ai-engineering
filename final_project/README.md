@@ -11,6 +11,7 @@ streamlit run frontend/ui_app.py
 ```
 At launch, enter either a Twitter bearer token **or** OAuth1 credentials
 (API key/secret and access token/secret) in the UI.
+If the sentiment model is private, also provide your **Hugging Face token**.
 
 ## Obtaining credentials
 
