@@ -37,7 +37,7 @@ class TwitterClient:
                 "Twitter credentials required: either bearer token or API key/secret and access token/secret"
             )
 
-    def search_recent(self, keyword: str, limit: int = 100) -> List[str]:
+    def search_recent(self, keyword: str, limit: int = 10) -> List[str]:
         """Search recent tweets within last 24h."""
         start_time = datetime.utcnow() - timedelta(days=1)
         if self.v2:
